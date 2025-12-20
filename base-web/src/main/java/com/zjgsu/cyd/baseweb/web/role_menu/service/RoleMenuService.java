@@ -1,0 +1,13 @@
+package com.zjgsu.cyd.baseweb.web.role_menu.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.zjgsu.cyd.baseweb.web.role_menu.entity.RoleMenu;
+
+import java.util.List;
+
+public interface RoleMenuService extends IService<RoleMenu> {
+    //保存权限
+    void saveRoleMenu(Long roleId, List<Long> menuIds);
+    boolean selectBindRole(Long roleId);
+
+}
