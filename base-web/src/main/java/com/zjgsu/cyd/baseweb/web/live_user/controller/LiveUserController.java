@@ -5,6 +5,13 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zjgsu.cyd.basecommon.utils.ResultUtils;
 import com.zjgsu.cyd.basecommon.utils.ResultVo;
+import com.zjgsu.cyd.baseweb.web.fee_park.entity.FeePark;
+import com.zjgsu.cyd.baseweb.web.fee_park.service.FeeParkService;
+import com.zjgsu.cyd.baseweb.web.fee_power.entity.FeePower;
+import com.zjgsu.cyd.baseweb.web.fee_power.service.FeePowerService;
+import com.zjgsu.cyd.baseweb.web.fee_water.entity.FeeWater;
+import com.zjgsu.cyd.baseweb.web.fee_water.service.FeeWaterService;
+import com.zjgsu.cyd.baseweb.web.live_park.entity.LivePark;
 import com.zjgsu.cyd.baseweb.web.live_user.entity.AssignHouseParm;
 import com.zjgsu.cyd.baseweb.web.live_user.entity.LiveUser;
 import com.zjgsu.cyd.baseweb.web.live_user.entity.LiveUserParm;
@@ -13,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -23,12 +32,12 @@ import org.springframework.web.bind.annotation.*;
 public class LiveUserController {
     @Autowired
     private LiveUserService liveUserService;
-//    @Autowired
-//    private FeeWaterService feeWaterService;
-//    @Autowired
-//    private FeePowerService feePowerService;
-//    @Autowired
-//    private FeeParkService feeParkService;
+    @Autowired
+    private FeeWaterService feeWaterService;
+    @Autowired
+    private FeePowerService feePowerService;
+    @Autowired
+    private FeeParkService feeParkService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -99,107 +108,107 @@ public class LiveUserController {
         liveUserService.assignHouse(parm);
         return ResultUtils.success("分配房屋成功!");
     }
-//
-//    /**
-//     * 分配车位保存
-//     */
-//    @PostMapping("/assignParkSave")
-//    @PreAuthorize("hasAuthority('sys:liveUser:assignCar')")
-//    public ResultVo assignParkSave(@RequestBody LivePark livePark){
-//        liveUserService.assignSavePark(livePark);
-//        return ResultUtils.success("分配车位成功!");
-//    }
-//
-//    /**
-//     * 退房：
-//     *      1.查询电费、水费是否已经交清；
-//     *     2.更新租户和房屋关系表状态为解绑；
-//     *     3.更新房屋表的使用状态为未使用；
-//     */
-//    @PostMapping("/returnHose")
-//    @PreAuthorize("hasAuthority('sys:liveUser:returnHome')")
-//    public ResultVo returnHose(@RequestBody AssignHouseParm parm){
-//        //1.查询电费、水费是否交清
-//        //构造查询条件
-//        QueryWrapper<FeeWater> queryWater = new QueryWrapper<>();
-//        queryWater.lambda().eq(FeeWater::getHouseId,parm.getHouseId())
-//                .eq(FeeWater::getUserId,parm.getUserId())
-//                .eq(FeeWater::getPayWaterStatus,"0");
-//        List<FeeWater> list = feeWaterService.list(queryWater);
-//        if(list != null && list.size() >0){
-//            return ResultUtils.error("请缴水费之后再退房!");
-//        }
-//        //查询电费
-//        QueryWrapper<FeePower> queryPower = new QueryWrapper<>();
-//        queryPower.lambda().eq(FeePower::getHouseId,parm.getHouseId())
-//                .eq(FeePower::getUserId,parm.getUserId())
-//                .eq(FeePower::getPayPowerStatus,"0");
-//        List<FeePower> list1 = feePowerService.list(queryPower);
-//        if(list1 != null && list1.size() >0){
-//            return ResultUtils.error("请缴电费之后再退房!");
-//        }
-//        liveUserService.returnHouse(parm);
-//        return ResultUtils.success("退房成功!");
-//    }
-//
-//    /**
-//     * 退车位
-//     *      1.查询车位费是否已经交清；
-//     *     2.更新租户和车位的关系为解绑；
-//     *     3.更新车位的使用状态为未使用；
-//     *
-//     */
-//    @PreAuthorize("hasAuthority('sys:liveUser:returnCar')")
-//    @PostMapping("/returnPark")
-//    public ResultVo returnPark(@RequestBody LivePark livePark){
-////        1.查询车位费是否已经交清；
-//        QueryWrapper<FeePark> query = new QueryWrapper<>();
-//        query.lambda().eq(FeePark::getParkId,livePark.getParkId())
-//                .eq(FeePark::getUserId,livePark.getUserId())
-//                .eq(FeePark::getPayParkStatus,"0");
-//        List<FeePark> list = feeParkService.list(query);
-//        if(list != null && list.size() >0){
-//            return ResultUtils.error("请缴清停车费后再退车位!");
-//        }
-//        liveUserService.returnPark(livePark);
-//        return ResultUtils.success("退车位成功!");
-//    }
-//    //删除业主
-//    @DeleteMapping(value = {"/{userId}/{houseId}","/{userId}"})
-//    public ResultVo deleteUser(@PathVariable("userId") Long userId,
-//                               @PathVariable(value = "houseId",required = false) Long houseId){
-//        //查询停车费
-//        QueryWrapper<FeePark> queryPark = new QueryWrapper<>();
-//        queryPark.lambda().eq(FeePark::getParkId,houseId)
-//                .eq(FeePark::getUserId,userId)
-//                .eq(FeePark::getPayParkStatus,"0");
-//        List<FeePark> listPark = feeParkService.list(queryPark);
-//        if(listPark != null && listPark.size() >0){
-//            return ResultUtils.error("该用户没有缴清停车费，不能删除!");
-//        }
-//        //查询水费
-//        QueryWrapper<FeeWater> queryWater = new QueryWrapper<>();
-//        queryWater.lambda().eq(FeeWater::getHouseId,houseId)
-//                .eq(FeeWater::getUserId,userId)
-//                .eq(FeeWater::getPayWaterStatus,"0");
-//        List<FeeWater> list = feeWaterService.list(queryWater);
-//        if(list != null && list.size() >0){
-//            return ResultUtils.error("该用户没有缴清水费，不能删除!");
-//        }
-//        //查询电费
-//        QueryWrapper<FeePower> queryPower = new QueryWrapper<>();
-//        queryPower.lambda().eq(FeePower::getHouseId,houseId)
-//                .eq(FeePower::getUserId,userId)
-//                .eq(FeePower::getPayPowerStatus,"0");
-//        List<FeePower> list1 = feePowerService.list(queryPower);
-//        if(list1 != null && list1.size() >0){
-//            return ResultUtils.error("该用户没有缴清电费，不能删除!");
-//        }
-//        boolean b = liveUserService.removeById(userId);
-//        if(b){
-//            return ResultUtils.success("删除成功!");
-//        }
-//        return ResultUtils.error("删除失败");
-//    }
+
+    /**
+     * 分配车位保存
+     */
+    @PostMapping("/assignParkSave")
+    @PreAuthorize("hasAuthority('sys:liveUser:assignCar')")
+    public ResultVo assignParkSave(@RequestBody LivePark livePark){
+        liveUserService.assignSavePark(livePark);
+        return ResultUtils.success("分配车位成功!");
+    }
+
+    /**
+     * 退房：
+     *      1.查询电费、水费是否已经交清；
+     *     2.更新租户和房屋关系表状态为解绑；
+     *     3.更新房屋表的使用状态为未使用；
+     */
+    @PostMapping("/returnHose")
+    @PreAuthorize("hasAuthority('sys:liveUser:returnHome')")
+    public ResultVo returnHose(@RequestBody AssignHouseParm parm){
+        //1.查询电费、水费是否交清
+        //构造查询条件
+        QueryWrapper<FeeWater> queryWater = new QueryWrapper<>();
+        queryWater.lambda().eq(FeeWater::getHouseId,parm.getHouseId())
+                .eq(FeeWater::getUserId,parm.getUserId())
+                .eq(FeeWater::getPayWaterStatus,"0");
+        List<FeeWater> list = feeWaterService.list(queryWater);
+        if(list != null && list.size() >0){
+            return ResultUtils.error("请缴水费之后再退房!");
+        }
+        //查询电费
+        QueryWrapper<FeePower> queryPower = new QueryWrapper<>();
+        queryPower.lambda().eq(FeePower::getHouseId,parm.getHouseId())
+                .eq(FeePower::getUserId,parm.getUserId())
+                .eq(FeePower::getPayPowerStatus,"0");
+        List<FeePower> list1 = feePowerService.list(queryPower);
+        if(list1 != null && list1.size() >0){
+            return ResultUtils.error("请缴电费之后再退房!");
+        }
+        liveUserService.returnHouse(parm);
+        return ResultUtils.success("退房成功!");
+    }
+
+    /**
+     * 退车位
+     *      1.查询车位费是否已经交清；
+     *     2.更新租户和车位的关系为解绑；
+     *     3.更新车位的使用状态为未使用；
+     *
+     */
+    @PreAuthorize("hasAuthority('sys:liveUser:returnCar')")
+    @PostMapping("/returnPark")
+    public ResultVo returnPark(@RequestBody LivePark livePark){
+//        1.查询车位费是否已经交清；
+        QueryWrapper<FeePark> query = new QueryWrapper<>();
+        query.lambda().eq(FeePark::getParkId,livePark.getParkId())
+                .eq(FeePark::getUserId,livePark.getUserId())
+                .eq(FeePark::getPayParkStatus,"0");
+        List<FeePark> list = feeParkService.list(query);
+        if(list != null && list.size() >0){
+            return ResultUtils.error("请缴清停车费后再退车位!");
+        }
+        liveUserService.returnPark(livePark);
+        return ResultUtils.success("退车位成功!");
+    }
+    //删除业主
+    @DeleteMapping(value = {"/{userId}/{houseId}","/{userId}"})
+    public ResultVo deleteUser(@PathVariable("userId") Long userId,
+                               @PathVariable(value = "houseId",required = false) Long houseId){
+        //查询停车费
+        QueryWrapper<FeePark> queryPark = new QueryWrapper<>();
+        queryPark.lambda().eq(FeePark::getParkId,houseId)
+                .eq(FeePark::getUserId,userId)
+                .eq(FeePark::getPayParkStatus,"0");
+        List<FeePark> listPark = feeParkService.list(queryPark);
+        if(listPark != null && listPark.size() >0){
+            return ResultUtils.error("该用户没有缴清停车费，不能删除!");
+        }
+        //查询水费
+        QueryWrapper<FeeWater> queryWater = new QueryWrapper<>();
+        queryWater.lambda().eq(FeeWater::getHouseId,houseId)
+                .eq(FeeWater::getUserId,userId)
+                .eq(FeeWater::getPayWaterStatus,"0");
+        List<FeeWater> list = feeWaterService.list(queryWater);
+        if(list != null && list.size() >0){
+            return ResultUtils.error("该用户没有缴清水费，不能删除!");
+        }
+        //查询电费
+        QueryWrapper<FeePower> queryPower = new QueryWrapper<>();
+        queryPower.lambda().eq(FeePower::getHouseId,houseId)
+                .eq(FeePower::getUserId,userId)
+                .eq(FeePower::getPayPowerStatus,"0");
+        List<FeePower> list1 = feePowerService.list(queryPower);
+        if(list1 != null && list1.size() >0){
+            return ResultUtils.error("该用户没有缴清电费，不能删除!");
+        }
+        boolean b = liveUserService.removeById(userId);
+        if(b){
+            return ResultUtils.success("删除成功!");
+        }
+        return ResultUtils.error("删除失败");
+    }
 
 }

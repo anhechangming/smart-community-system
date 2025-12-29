@@ -3,6 +3,7 @@ package com.zjgsu.cyd.baseweb.web.live_user.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zjgsu.cyd.baseweb.web.live_park.entity.LivePark;
 import com.zjgsu.cyd.baseweb.web.live_user.entity.AssignHouseParm;
 import com.zjgsu.cyd.baseweb.web.live_user.entity.LiveUser;
 
@@ -17,12 +18,12 @@ public interface LiveUserService extends IService<LiveUser> {
     LiveUser getUser(Long userId);
     //分配房屋保存
     void assignHouse(AssignHouseParm parm);
-//    //分配车位保存
-//    void assignSavePark(LivePark livePark);
-//    //退房
-//    void returnHouse(AssignHouseParm parm);
-//    //退车位
-//    void returnPark(LivePark livePark);
+    //分配车位保存
+    void assignSavePark(LivePark livePark);
+    //退房
+    void returnHouse(AssignHouseParm parm);
+    //退车位
+    void returnPark(LivePark livePark);
     //根据用户名查询用户信息
     LiveUser loadUser(String username);
 }
