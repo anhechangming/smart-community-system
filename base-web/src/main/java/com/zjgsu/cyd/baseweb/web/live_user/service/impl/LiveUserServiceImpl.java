@@ -4,6 +4,7 @@ package com.zjgsu.cyd.baseweb.web.live_user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zjgsu.cyd.baseweb.web.live_house.mapper.LiveHouseMapper;
 import com.zjgsu.cyd.baseweb.web.live_role.entity.LiveRole;
 import com.zjgsu.cyd.baseweb.web.live_role.mapper.LiveRoleMapper;
 import com.zjgsu.cyd.baseweb.web.live_user.entity.AssignHouseParm;
@@ -20,8 +21,8 @@ public class LiveUserServiceImpl extends ServiceImpl<LiveUserMapper, LiveUser> i
     @Resource
     private LiveRoleMapper liveRoleMapper;
 
-//    @Resource
-//    private LiveHouseMapper liveHouseMapper;
+    @Resource
+    private LiveHouseMapper liveHouseMapper;
 //
 //    @Resource
 //    private HouseListMapper houseListMapper;

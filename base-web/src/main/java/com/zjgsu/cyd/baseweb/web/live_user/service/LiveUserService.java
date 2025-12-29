@@ -15,8 +15,8 @@ public interface LiveUserService extends IService<LiveUser> {
     void editLiveUser(LiveUser liveUser);
     //编辑查询
     LiveUser getUser(Long userId);
-//    //分配房屋保存
-//    void assignHouse(AssignHouseParm parm);
+    //分配房屋保存
+    void assignHouse(AssignHouseParm parm);
 //    //分配车位保存
 //    void assignSavePark(LivePark livePark);
 //    //退房

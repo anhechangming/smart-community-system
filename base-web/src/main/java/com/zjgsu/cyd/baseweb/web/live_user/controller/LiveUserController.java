@@ -90,15 +90,15 @@ public class LiveUserController {
         LiveUser user = liveUserService.getUser(liveUser.getUserId());
         return ResultUtils.success("查询成功",user);
     }
-//    /**
-//     * 分配房屋保存
-//     */
-//    @PostMapping("/assignSave")
-//    @PreAuthorize("hasAuthority('sys:liveUser:assignHome')")
-//    public ResultVo assignSave(@RequestBody AssignHouseParm parm){
-//        liveUserService.assignHouse(parm);
-//        return ResultUtils.success("分配房屋成功!");
-//    }
+    /**
+     * 分配房屋保存
+     */
+    @PostMapping("/assignSave")
+    @PreAuthorize("hasAuthority('sys:liveUser:assignHome')")
+    public ResultVo assignSave(@RequestBody AssignHouseParm parm){
+        liveUserService.assignHouse(parm);
+        return ResultUtils.success("分配房屋成功!");
+    }
 //
 //    /**
 //     * 分配车位保存
